@@ -17,7 +17,7 @@ function operate(operator, x, y) {
       break;
 
     case "/":
-      result = roundToNearestThousandth(x / y);
+      result = (x / y);
       break;
 
     default:
@@ -25,7 +25,7 @@ function operate(operator, x, y) {
       break;
   }
 
-  return result == Infinity ? "bruh" : result;
+  return result == Infinity ? "bruh" : roundToNearestThousandth(result);
 }
 
 module.exports = operate;
