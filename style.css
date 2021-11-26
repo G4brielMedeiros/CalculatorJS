@@ -63,7 +63,7 @@ body {
   border-bottom-right-radius: 15px;
 }
 
-.operator {
+.operator, .equals {
   background-color: rgba(144, 238, 144, 0.5);
 }
 
@@ -75,7 +75,7 @@ body {
   background-color: rgba(0, 255, 255, 0.3);
 }
 
-.operator:hover {
+.operator:hover, .equals:hover {
   background-color: rgba(144, 238, 144, 0.8);
 }
 
@@ -87,7 +87,7 @@ body {
   background-color: rgba(0, 255, 255, 0.5);
 }
 
-.operator:active {
+.operator:active, .equals:active, .pressed {
   background-color: rgb(144, 238, 144);
 }
 

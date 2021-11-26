@@ -1,9 +1,8 @@
 const digitsDOM = document.querySelectorAll(".digit");
+const operatorsDOM = document.querySelectorAll(".operator");
 const displayDOM = document.getElementById("expression");
 const dotDOM = document.getElementById("dot");
 const acDOM = document.getElementById("ac");
-
-const displayLimit = 20;
 
 function operate(operator, x, y) {
   let result = 0;
@@ -33,32 +32,72 @@ function operate(operator, x, y) {
   return result == Infinity ? "bruh" : Math.round(result * 10000) / 10000;
 }
 
+const hasDot            = (...strings) => strings.every((string) => string.includes("."));
+const isUnderIntLimit   = (string) => hasDot(string) && string.substr(string.indexOf(".")).length < 9;
+const isUnderFloatLimit = (string) => string.length < 9;
+const isUnderLimits     = (string) => isUnderFloatLimit(string) || isUnderIntLimit(string);
+const addDigit          = (update) => displayDOM.textContent += update;
 
-function displayDigit(digitDOM) {
+let displayedOperand = "";
+
+function getDigit(digitDOM) {
   return () => {
+
     const DIGIT = digitDOM.textContent;
-    const TEXT = displayDOM.textContent;
+    const DISPLAY = displayDOM.textContent;
 
+    if (hasDot(DIGIT, DISPLAY)) return;
 
-    if ( (TEXT.length < displayLimit) && (TEXT.substr(TEXT.indexOf(".")).length != 17) ) {
-
-      if (TEXT.includes(".") && DIGIT.includes(".")) return;
-
-      displayDOM.textContent += DIGIT;
-    }
-
+    if (hasDot(DIGIT)) DISPLAY.length == 0 ? addDigit("0.") : addDigit(".");
+    else if (isUnderLimits(DISPLAY)) addDigit(DIGIT);
   };
 }
 
 
-Array.from(digitsDOM).map((digitDOM) => {
-  digitDOM.addEventListener("click", displayDigit(digitDOM));
-});
-
-acDOM.addEventListener("click", () => displayDOM.textContent = "");
-
-module.exports = operate;
-
-console.log(1/3);
 
 
+
+let operator;
+let numX;
+let numY;
+
+
+
+function setupOperation(operatorDOM) {
+  return () => {
+
+    if (operator) operator.classList = "button operator";
+
+    numX = Number(displayDOM.textContent);   
+    operator = operatorDOM;
+    operatorDOM.classList += " pressed";
+    console.log(numX + " " + operator.textContent);
+  };
+}
+
+
+function clearMemory() {
+  return () => {
+    
+    displayDOM.textContent = "";
+    operator.classList = "button operator";
+    numY, numX, operator = null;
+  };
+}
+
+
+digitsDOM.forEach((digitDOM) => 
+  digitDOM.addEventListener("click", getDigit(digitDOM))
+);
+
+
+operatorsDOM.forEach((operatorDOM) => 
+  operatorDOM.addEventListener("click", setupOperation(operatorDOM))
+);
+
+
+acDOM.addEventListener("click", clearMemory());
+
+
+
+//module.exports = operate;
