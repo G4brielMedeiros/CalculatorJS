@@ -18,16 +18,16 @@ describe("operate function", () => {
   });
 
   it("multiplies", () => {
-    expect(operate("*", 3, 2)).toBe(6);
-    expect(operate("*", 0, 2)).toBe(0);
-    expect(operate("*", 2, 0)).toBe(0);
-    expect(operate("*", 1.2, 2.8)).toBe(3.36);
+    expect(operate("×", 3, 2)).toBe(6);
+    expect(operate("×", 0, 2)).toBe(0);
+    expect(operate("×", 2, 0)).toBe(0);
+    expect(operate("×", 1.2, 2.8)).toBe(3.36);
   });
 
   it("divides", () => {
-    expect(operate("/", 6, 2)).toBe(3);
-    expect(operate("/", 4, 3)).toBe(1.3333);
-    expect(operate("/", 1, 0)).toBe('bruh');
-    expect(operate("/", 6, 1)).toBe(6);
+    expect(operate("÷", 6, 2)).toBe(3);
+    expect(operate("÷", 4, 3)).toBe(1.3333);
+    expect(operate("÷", 1, 0)).toBe('bruh');
+    expect(operate("÷", 6, 1)).toBe(6);
   });
 })

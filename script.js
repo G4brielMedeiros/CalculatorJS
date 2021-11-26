@@ -1,9 +1,24 @@
+// Constants for DOM elements.
 const digitsDOM = document.querySelectorAll(".digit");
 const operatorsDOM = document.querySelectorAll(".operator");
 const displayDOM = document.getElementById("expression");
 const dotDOM = document.getElementById("dot");
 const acDOM = document.getElementById("ac");
 
+// Memory.
+let displayedOperand = "";
+let operator;
+let numX;
+let numY;
+
+// Helper functions for cleaner code.
+const hasDot            = (...strings) => strings.every((string) => string.includes("."));
+const isUnderIntLimit   = (string) => hasDot(string) && string.substr(string.indexOf(".")).length < 9;
+const isUnderFloatLimit = (string) => string.length < 9;
+const isUnderLimits     = (string) => isUnderFloatLimit(string) || isUnderIntLimit(string);
+const addDigit          = (update) => displayDOM.textContent += update;
+
+// Validates a mathematical expression of [x operator y].
 function operate(operator, x, y) {
   let result = 0;
 
@@ -16,11 +31,11 @@ function operate(operator, x, y) {
       result = x - y;
       break;
 
-    case "*":
+    case "×":
       result = x * y;
       break;
 
-    case "/":
+    case "÷":
       result = x / y;
       break;
 
@@ -32,15 +47,8 @@ function operate(operator, x, y) {
   return result == Infinity ? "bruh" : Math.round(result * 10000) / 10000;
 }
 
-const hasDot            = (...strings) => strings.every((string) => string.includes("."));
-const isUnderIntLimit   = (string) => hasDot(string) && string.substr(string.indexOf(".")).length < 9;
-const isUnderFloatLimit = (string) => string.length < 9;
-const isUnderLimits     = (string) => isUnderFloatLimit(string) || isUnderIntLimit(string);
-const addDigit          = (update) => displayDOM.textContent += update;
-
-let displayedOperand = "";
-
-function getDigit(digitDOM) {
+// Adds a digit to the display validated by length rules.
+function updateDisplay(digitDOM) {
   return () => {
 
     const DIGIT = digitDOM.textContent;
@@ -53,16 +61,7 @@ function getDigit(digitDOM) {
   };
 }
 
-
-
-
-
-let operator;
-let numX;
-let numY;
-
-
-
+// Sets up [x operator] to be ready for [y].
 function setupOperation(operatorDOM) {
   return () => {
 
@@ -71,33 +70,34 @@ function setupOperation(operatorDOM) {
     numX = Number(displayDOM.textContent);   
     operator = operatorDOM;
     operatorDOM.classList += " pressed";
-    console.log(numX + " " + operator.textContent);
   };
 }
 
-
+// Resets the calculator.
 function clearMemory() {
   return () => {
+
+    if (displayDOM.textContent == "") return;
     
     displayDOM.textContent = "";
     operator.classList = "button operator";
-    numY, numX, operator = null;
+    numX, numY, operator = null;
   };
 }
 
-
+// Adds event listeners to DOM elements.
+function addEventListeners() {
 digitsDOM.forEach((digitDOM) => 
-  digitDOM.addEventListener("click", getDigit(digitDOM))
+  digitDOM.addEventListener("click", updateDisplay(digitDOM))
 );
-
 
 operatorsDOM.forEach((operatorDOM) => 
   operatorDOM.addEventListener("click", setupOperation(operatorDOM))
 );
 
-
 acDOM.addEventListener("click", clearMemory());
+}
 
-
+addEventListeners();
 
 //module.exports = operate;
