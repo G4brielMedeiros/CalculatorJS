@@ -1,13 +1,14 @@
 // Constants for DOM elements.
-const digitsDOM = document.querySelectorAll(".digit");
-const operatorsDOM = document.querySelectorAll(".operator");
-const displayDOM = document.getElementById("expression");
-const dotDOM = document.getElementById("dot");
-const acDOM = document.getElementById("ac");
+const digitsDOM     = document.querySelectorAll(".digit");
+const operatorsDOM  = document.querySelectorAll(".operator");
+const displayDOM    = document.getElementById("expression");
+const dotDOM        = document.getElementById("dot");
+const acDOM         = document.getElementById("ac");
+const equalsDOM     = document.getElementById("equals");
 
 // Memory.
-let displayedOperand = "";
 let operator;
+let mustEraseDisplay;
 let numX;
 let numY;
 
@@ -20,6 +21,7 @@ const addDigit          = (update) => displayDOM.textContent += update;
 
 // Validates a mathematical expression of [x operator y].
 function operate(operator, x, y) {
+
   let result = 0;
 
   switch (operator) {
@@ -47,9 +49,16 @@ function operate(operator, x, y) {
   return result == Infinity ? "bruh" : Math.round(result * 10000) / 10000;
 }
 
+
+
 // Adds a digit to the display validated by length rules.
 function updateDisplay(digitDOM) {
   return () => {
+
+    if (mustEraseDisplay) {
+      displayDOM.textContent = ""; 
+      mustEraseDisplay = false;
+    }
 
     const DIGIT = digitDOM.textContent;
     const DISPLAY = displayDOM.textContent;
@@ -61,41 +70,79 @@ function updateDisplay(digitDOM) {
   };
 }
 
+
+
 // Sets up [x operator] to be ready for [y].
 function setupOperation(operatorDOM) {
   return () => {
-
+    
+    //Clear previous operation
     if (operator) operator.classList = "button operator";
+    if (numY) numY = null;
+
 
     numX = Number(displayDOM.textContent);   
     operator = operatorDOM;
     operatorDOM.classList += " pressed";
+
+    mustEraseDisplay = true;
   };
 }
+
+
 
 // Resets the calculator.
-function clearMemory() {
-  return () => {
+const clearMemory = () => {
 
     if (displayDOM.textContent == "") return;
-    
+    if (operator) operator.classList = "button operator";
+
     displayDOM.textContent = "";
-    operator.classList = "button operator";
-    numX, numY, operator = null;
+    
+    numX = null;
+    numY = null;
+    operator = null;
+    console.log(numX, numY, operator);
   };
-}
+
+
+
+const calculate = () => {
+
+
+  if (operator) {
+    if (!numY)
+      numY = Number(displayDOM.textContent);
+
+    console.log(numX, operator.textContent, numY);
+
+    numX = operate(operator.textContent, numX, numY);
+
+    displayDOM.textContent = numX;
+
+    operator.classList = "button operator";
+  }
+
+
+};
+
+
 
 // Adds event listeners to DOM elements.
 function addEventListeners() {
-digitsDOM.forEach((digitDOM) => 
-  digitDOM.addEventListener("click", updateDisplay(digitDOM))
-);
+  
+  digitsDOM.forEach((digitDOM) => 
+    digitDOM.addEventListener("click", updateDisplay(digitDOM))
+  );
 
-operatorsDOM.forEach((operatorDOM) => 
-  operatorDOM.addEventListener("click", setupOperation(operatorDOM))
-);
+  operatorsDOM.forEach((operatorDOM) => 
+    operatorDOM.addEventListener("click", setupOperation(operatorDOM))
+  );
 
-acDOM.addEventListener("click", clearMemory());
+  acDOM.addEventListener("click", clearMemory);
+
+  equalsDOM.addEventListener("click", calculate)
+
 }
 
 addEventListeners();
