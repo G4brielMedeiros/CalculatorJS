@@ -5,6 +5,8 @@ const displayDOM    = document.getElementById("expression");
 const dotDOM        = document.getElementById("dot");
 const acDOM         = document.getElementById("ac");
 const equalsDOM     = document.getElementById("equals");
+const signalDOM     = document.getElementById("signal");
+const percentDOM    = document.getElementById("percent");
 
 // Memory.
 let operator;
@@ -94,16 +96,16 @@ function setupOperation(operatorDOM) {
 // Resets the calculator.
 const clearMemory = () => {
 
-    if (displayDOM.textContent == "") return;
-    if (operator) operator.classList = "button operator";
+  if (displayDOM.textContent == "") return;
+  if (operator) operator.classList = "button operator";
 
-    displayDOM.textContent = "";
-    
-    numX = null;
-    numY = null;
-    operator = null;
-    console.log(numX, numY, operator);
-  };
+  displayDOM.textContent = "";
+  
+  numX = null;
+  numY = null;
+  operator = null;
+  console.log(numX, numY, operator);
+};
 
 
 
@@ -128,6 +130,24 @@ const calculate = () => {
 
 
 
+const swapSignal = () => {
+
+  const DISPLAY = displayDOM.textContent;
+
+  if (DISPLAY.charAt(0) == "-") {
+    displayDOM.textContent = DISPLAY.substr(1);
+    numX *= -1;
+
+  }
+  else if (DISPLAY != "" && DISPLAY != 0) {
+    displayDOM.textContent = "-" + DISPLAY;
+    numX *= -1;
+  }
+
+};
+
+
+
 // Adds event listeners to DOM elements.
 function addEventListeners() {
   
@@ -141,7 +161,9 @@ function addEventListeners() {
 
   acDOM.addEventListener("click", clearMemory);
 
-  equalsDOM.addEventListener("click", calculate)
+  equalsDOM.addEventListener("click", calculate);
+
+  signalDOM.addEventListener("click", swapSignal)
 
 }
 
