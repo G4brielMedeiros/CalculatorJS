@@ -148,6 +148,13 @@ const swapSignal = () => {
 
 
 
+const percent = () => {
+  
+  displayDOM.textContent = Number(displayDOM.textContent) / 100;
+}
+
+
+
 // Adds event listeners to DOM elements.
 function addEventListeners() {
   
@@ -163,7 +170,9 @@ function addEventListeners() {
 
   equalsDOM.addEventListener("click", calculate);
 
-  signalDOM.addEventListener("click", swapSignal)
+  signalDOM.addEventListener("click", swapSignal);
+
+  percentDOM.addEventListener("click", percent);
 
 }
 
